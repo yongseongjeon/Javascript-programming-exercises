@@ -1,25 +1,24 @@
 function solution(n, edge) {
   let isVisited = Array(n).fill(false);
-  let distance = Array(n).fill(-1);
+  let distance = Array(n).fill(0);
   const q = [];
-  let temp = [];
-  let answer = [];
   
   q.push(1);
   isVisited[0] = true;
   
   while (q.length) {
       let current = q.shift();
-      edge.forEach((x) => { 
-          if (x.includes(current)) {
-              const filter = x.filter((node) => node !== current)[0];
-              if (!isVisited[filter - 1]) {
-                  q.push(filter)
-                  distance[filter - 1] = distance[current - 1] + 1;
-              } else {
-                  edge.splice(filter - 1, 1);   
+      for (let i = 0; i < edge.length; i++) {
+          if (edge[i].includes(current)) {
+              const nextNode = edge[i][0] === current ? edge[i][1] : edge[i][0];
+              if (!isVisited[nextNode - 1]) {
+                  q.push(nextNode);
+                  isVisited[nextNode - 1] = true;
+                  distance[nextNode - 1] = distance[current - 1] + 1;
               }
           }
-      });
+      }
   }
+  const maxNum = Math.max(...distance);
+  return distance.filter((num) => num === maxNum).length;
 }
